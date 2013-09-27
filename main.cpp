@@ -11,8 +11,8 @@ int main()
 
 
 
-TEST(max_nondiag_func){
-
+TEST(max_nondiag_func)
+{
     int i;
     int size = 2;
     double max_element;
@@ -39,3 +39,48 @@ TEST(max_nondiag_func){
     }
     delete[] matrix;
 }
+
+TEST(jacobi_algorithm)
+{
+    int i;
+    int n = 3;
+
+    double epsilon = 1e-8;
+
+    double **A = new double*[n];
+    for( i = 0; i < n; i++ ){
+        A[i] = new double[n];
+    }
+
+    A[0][0] = 6;
+    A[0][1] = -2;
+    A[0][2] = -1;
+    A[1][0] = -2;
+    A[1][1] = 6;
+    A[1][2] = -1;
+    A[2][0] = -1;
+    A[2][1] = -1;
+    A[2][2] = 5;
+
+    jacobi_algorithm(n, A, epsilon);
+
+    /*
+    for( i = 0; i < n; i++ ){
+        for( j = 0; j < n; j++ ){
+            cout << A[i][j] << '\t';
+        }
+        cout << endl;
+    }
+    */
+
+    CHECK( ( A[0][0] - 3 < epsilon ) && ( A[0][1] < epsilon ) && ( A[0][2] < epsilon ) &&
+            ( A[1][0] < epsilon ) && ( A[1][1] - 8 < epsilon ) && ( A[1][2] < epsilon ) &&
+            ( A[2][0] < epsilon ) && ( A[2][1] < epsilon ) && ( A[2][2] - 6 < epsilon ) );
+
+
+    for( i = 0; i < n; i++ ){
+        delete[] A[i];
+    }
+    delete[] A;
+}
+
