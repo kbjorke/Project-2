@@ -1,34 +1,42 @@
 #include <cmath>
 #include "jacobi_algorithm.h"
 
-#include <iostream>
-
 using namespace std;
 
-void jacobi_algorithm (int n, double **A, double epsilon)
+void jacobi_algorithm (int n, double **A, double **V, double epsilon)
 {
     int k;
     int l;
+
+    double s;
+    double c;
 
     double max_a_ij;
 
     max_a_ij = max_nondiag(n, A, &k, &l);
 
-    while( max_a_ij > epsilon ){
-        similarity_transformation(n, A, &k, &l);
-        max_a_ij = max_nondiag(n, A, &k, &l);
+    if( V == 0 ){
+        while( max_a_ij > epsilon ){
+            similarity_transformation(n, A, &k, &l, &c, &s);
+            max_a_ij = max_nondiag(n, A, &k, &l);
+        }
+    }
+    else{
+        while( max_a_ij > epsilon ){
+            similarity_transformation(n, A, &k, &l, &c, &s);
+            eigenvectors(n, V, &k, &l, &c, &s);
+            max_a_ij = max_nondiag(n, A, &k, &l);
+        }
     }
 }
 
 
-void similarity_transformation(int n, double **A, int *k, int *l)
+void similarity_transformation (int n, double **A, int *k, int *l, double *c, double *s)
 {
     int i;
 
     static double tau;
     static double t;
-    static double s;
-    static double c;
 
     static double a_kk;
     static double a_ll;
@@ -44,14 +52,14 @@ void similarity_transformation(int n, double **A, int *k, int *l)
         t = -1 / (-tau + sqrt(1 + tau*tau));
     }
 
-    c = 1 / sqrt(1 + t*t);
-    s = t*c;
+    *c = 1 / sqrt(1 + t*t);
+    *s = t*(*c);
 
     a_kk = A[*k][*k];
     a_ll = A[*l][*l];
 
-    A[*k][*k] = a_kk*c*c - 2*A[*k][*l]*c*s + a_ll*s*s;
-    A[*l][*l] = a_ll*c*c + 2*A[*k][*l]*c*s + a_kk*s*s;
+    A[*k][*k] = a_kk*(*c)*(*c) - 2*A[*k][*l]*(*c)*(*s) + a_ll*(*s)*(*s);
+    A[*l][*l] = a_ll*(*c)*(*c) + 2*A[*k][*l]*(*c)*(*s) + a_kk*(*s)*(*s);
 
 
     A[*k][*l] = 0;
@@ -62,16 +70,34 @@ void similarity_transformation(int n, double **A, int *k, int *l)
             a_ik = A[i][*k];
             a_il = A[i][*l];
 
-            A[i][*k] = a_ik*c - a_il*s;
+            A[i][*k] = a_ik*(*c) - a_il*(*s);
             A[*k][i] = A[i][*k];
-            A[i][*l] = a_il*c + a_ik*s;
+            A[i][*l] = a_il*(*c) + a_ik*(*s);
             A[*l][i] = A[i][*l];
         }
     }
 }
 
+void eigenvectors (int n, double **V, int *k, int *l, double *c, double *s)
+{
+    int i;
 
-double max_nondiag(int n, double **A, int *k, int *l)
+    static double *V_k = new double[n];
+    static double *V_l = new double[n];
+
+    for( i = 0; i < n; i++ ){
+        V_k[i] = V[i][*k];
+        V_l[i] = V[i][*l];
+    }
+
+    for( i = 0; i < n; i++ ){
+        V[i][*k] = *c * V_k[i] - *s * V_l[i];
+        V[i][*l] = *s * V_k[i] + *c * V_l[i];
+    }
+}
+
+
+double max_nondiag (int n, double **A, int *k, int *l)
 {
     int i;
     int j;
