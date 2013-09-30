@@ -97,9 +97,9 @@ TEST(jacobi_eigenvectors)
     for( i = 0; i < n; i++ ){
         A[i] = new double[n];
     }
-    double **V = new double*[n];
+    double **P = new double*[n];
     for( i = 0; i < n; i++ ){
-        V[i] = new double[n];
+        P[i] = new double[n];
     }
 
 
@@ -116,36 +116,36 @@ TEST(jacobi_eigenvectors)
     for( i = 0; i < n; i++ ){
         for( j = 0; j < n; j++ ){
             if( i == j ){
-                V[i][j] = 1;
+                P[i][j] = 1;
             }
             else{
-                V[i][j] = 0;
+                P[i][j] = 0;
             }
         }
     }
 
-    jacobi_algorithm(n, A, V, 1e-8);
+    jacobi_algorithm(n, A, P, 1e-8);
 
-    CHECK( ( fabs(V[0][0]) - 1/sqrt(3) < epsilon ) &&
-           ( fabs(V[1][0]) - 1/sqrt(3) < epsilon ) &&
-           ( fabs(V[2][0]) - 1/sqrt(3) < epsilon ) &&
+    CHECK( ( fabs(P[0][0]) - 1/sqrt(3) < epsilon ) &&
+           ( fabs(P[1][0]) - 1/sqrt(3) < epsilon ) &&
+           ( fabs(P[2][0]) - 1/sqrt(3) < epsilon ) &&
 
-           ( fabs(V[0][1]) - 1/sqrt(2) < epsilon ) &&
-           ( fabs(V[1][1]) - 1/sqrt(2) < epsilon ) &&
-           ( fabs(V[2][1]) - 0 < epsilon ) &&
+           ( fabs(P[0][1]) - 1/sqrt(2) < epsilon ) &&
+           ( fabs(P[1][1]) - 1/sqrt(2) < epsilon ) &&
+           ( fabs(P[2][1]) - 0 < epsilon ) &&
 
-           ( fabs(V[0][2]) - 1/sqrt(6) < epsilon ) &&
-           ( fabs(V[1][2]) - 1/sqrt(6) < epsilon ) &&
-           ( fabs(V[2][2]) - 2/sqrt(6) < epsilon ) );
+           ( fabs(P[0][2]) - 1/sqrt(6) < epsilon ) &&
+           ( fabs(P[1][2]) - 1/sqrt(6) < epsilon ) &&
+           ( fabs(P[2][2]) - 2/sqrt(6) < epsilon ) );
 
     for( i = 0; i < n; i++ ){
         delete[] A[i];
     }
     delete[] A;
     for( i = 0; i < n; i++ ){
-        delete[] V[i];
+        delete[] P[i];
     }
-    delete[] V;
+    delete[] P;
 
 
 
