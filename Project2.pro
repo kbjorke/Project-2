@@ -3,9 +3,11 @@ CONFIG += console
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    jacobi_algorithm.cpp
+    jacobi_algorithm.cpp \
+    harmonic_oscillator_3d.cpp
 
 LIBS += -larmadillo -lblas -llapack -lunittest++
 
 HEADERS += \
-    jacobi_algorithm.h
+    jacobi_algorithm.h \
+    harmonic_oscillator_3d.h
