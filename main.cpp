@@ -2,11 +2,60 @@
 #include <iostream>
 #include <cmath>
 #include "jacobi_algorithm.h"
+#include "harmonic_oscillator_3d.h"
+
+#include <algorithm>
 
 using namespace std;
 
 int main()
 {
+    int n;
+    int i;
+    int j;
+
+    double rho_max;
+
+    rho_max = 3;
+    n = 3;
+
+    double eigenvalues[n];
+
+    double **A = new double*[n];
+    for( i = 0; i < n; i++ ){
+        A[i] = new double[n];
+    }
+    /*
+    double **P = new double*[n];
+    for( i = 0; i < n; i++ ){
+        P[i] = new double[n];
+    }
+    */
+
+    Harmonic_Oscillator_3d harmonic_oscillator (A);
+
+    harmonic_oscillator.initialize(n, rho_max);
+
+    harmonic_oscillator.solve(eigenvalues);
+
+    sort(eigenvalues, eigenvalues+n);
+
+    for( i = 0; i < n; i++ ){
+        cout << eigenvalues[n-1-i] << endl;
+    }
+
+
+    for( i = 0; i < n; i++ ){
+        delete[] A[i];
+    }
+    delete[] A;
+    /*
+    for( i = 0; i < n; i++ ){
+        delete[] P[i];
+    }
+    delete[] P;
+    */
+
     return UnitTest::RunAllTests();
 }
 
@@ -146,7 +195,59 @@ TEST(jacobi_eigenvectors)
         delete[] P[i];
     }
     delete[] P;
+}
+
+TEST(Harmonic_ocillator_3d_initialize)
+{
+    int n;
+    int i;
+    int j;
+
+    double rho_max;
+
+    rho_max = 10;
+    n = 5;
+
+    double **A = new double*[n];
+    for( i = 0; i < n; i++ ){
+        A[i] = new double[n];
+    }
+    double **P = new double*[n];
+    for( i = 0; i < n; i++ ){
+        P[i] = new double[n];
+    }
+
+    Harmonic_Oscillator_3d harmonic_oscillator (A, P);
+
+    harmonic_oscillator.initialize(n, rho_max);
 
 
+    for( i = 0; i < n; i++ ){
+        for( j = 0; j < n; j++ ){
+            cout << A[i][j] << '\t';
+        }
+        cout << endl;
+    }
+    cout << endl;
+    for( i = 0; i < n; i++ ){
+        for( j = 0; j < n; j++ ){
+            cout << P[i][j] << '\t';
+        }
+        cout << endl;
+    }
 
+
+    for( i = 0; i < n; i++ ){
+        delete[] A[i];
+    }
+    delete[] A;
+    for( i = 0; i < n; i++ ){
+        delete[] P[i];
+    }
+    delete[] P;
+}
+
+
+TEST(Harmonic_ocillator_3d_solve)
+{
 }
