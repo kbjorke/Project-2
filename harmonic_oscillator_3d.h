@@ -24,7 +24,7 @@ public:
                            bool interaction = false);
     void initialize(int n_steps, double rho_max, double omega_r = 0,
                     double **P_matrix = 0);
-    void solve (double *eigenvalues);
+    void solve (double *eigenvalues, int *counter = 0);
 };
 
 #endif // HARMONIC_OSCILLATOR_3D_H

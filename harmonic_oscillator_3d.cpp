@@ -40,54 +40,46 @@ void Harmonic_Oscillator_3d::initialize(int n_steps, double rho_max,
     double omega_r2;
 
     rho_min = 0;
+    rho = rho_min;
 
     omega_r2 = omega_r*omega_r;
 
-    h = ( rho_max - rho_min )/n_steps;
+    h = ( rho_max - rho_min )/(n_steps+1);
 
     e = -1/(h*h);
 
     if( interact ){
-        for( i = 0; i < n_steps; i++ ){
-            rho = rho_min + i*h;
-            if( rho > 0 ){
-                d = -2*e + omega_r2*rho*rho + 1/rho;
-            }
-            else{
-                d = -2*e;
-            }
+        for( i = 0; i < (n_steps-1); i++ ){
+            rho += h;
 
-            for( j = 0; j < n_steps; j++){
-                if( i == j ){
-                        A[i][j] = d;
-                }
-                else if( fabs( i - j ) == 1){
-                    A[i][j] = e;
-                }
-                else if( fabs( i - j ) > 1){
+            A[i][i] = -2*e + omega_r2*rho*rho + 1/rho;
+            A[i+1][i] = e;
+            A[i][i+1] = e;
+
+            for( j = 0; j < n; j++ ){
+                if ( fabs(i-j) > 1 ){
                     A[i][j] = 0;
                 }
             }
         }
+        A[n_steps-1][n_steps-1] = -2*e + omega_r2*rho*rho + 1/rho;
     }
 
     else{
-        for( i = 0; i < n_steps; i++ ){
-            rho = rho_min + i*h;
-            d = -2*e + rho*rho;
+        for( i = 0; i < (n_steps-1); i++ ){
+            rho += h;
 
-            for( j = 0; j < n_steps; j++){
-                if( i == j ){
-                        A[i][j] = d;
-                }
-                else if( fabs( i - j ) == 1){
-                    A[i][j] = e;
-                }
-                else if( fabs( i - j ) > 1){
+            A[i][i] = -2*e + rho*rho;
+            A[i+1][i] = e;
+            A[i][i+1] = e;
+
+            for( j = 0; j < n; j++ ){
+                if ( fabs(i-j) > 1 ){
                     A[i][j] = 0;
                 }
             }
         }
+        A[n_steps-1][n_steps-1] = -2*e + rho*rho;
     }
 
     if( eigenvectors ){
@@ -105,15 +97,15 @@ void Harmonic_Oscillator_3d::initialize(int n_steps, double rho_max,
 }
 
 
-void Harmonic_Oscillator_3d::solve(double *eigenvalues)
+void Harmonic_Oscillator_3d::solve(double *eigenvalues, int *counter)
 {
     int i;
 
     if( eigenvectors ){
-        jacobi_algorithm(n, A, P);
+        jacobi_algorithm(n, A, P, counter);
     }
     else{
-        jacobi_algorithm(n, A);
+        jacobi_algorithm(n, A, 0, counter);
     }
 
     for( i = 0; i < n; i++ ){
