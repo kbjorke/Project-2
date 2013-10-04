@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void jacobi_algorithm (int n, double **A, double **P, double epsilon)
+void jacobi_algorithm (int n, double **A, double **P, int *counter, double epsilon)
 {
     int k;
     int l;
@@ -15,10 +15,12 @@ void jacobi_algorithm (int n, double **A, double **P, double epsilon)
 
     max_a_ij = max_nondiag(n, A, &k, &l);
 
+    *counter = 0;
     if( P == 0 ){
         while( max_a_ij > epsilon ){
             similarity_transformation(n, A, &k, &l, &c, &s);
             max_a_ij = max_nondiag(n, A, &k, &l);
+            *counter += 1;
         }
     }
     else{
@@ -26,6 +28,7 @@ void jacobi_algorithm (int n, double **A, double **P, double epsilon)
             similarity_transformation(n, A, &k, &l, &c, &s);
             eigenvectors(n, P, &k, &l, &c, &s);
             max_a_ij = max_nondiag(n, A, &k, &l);
+            *counter += 1;
         }
     }
 }
