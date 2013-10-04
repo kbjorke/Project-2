@@ -1,22 +1,19 @@
 #include <unittest++/UnitTest++.h>
 #include <iostream>
-#include <fstream>
 #include <cmath>
 #include "jacobi_algorithm.h"
 #include "harmonic_oscillator_3d.h"
+#include "output_functions.h"
 
 #include <algorithm>
 
 using namespace std;
 
-void eigenstates_index(int m, double *index_list, int n, double *eigenvalues);
-void output_stability(int n_start, int n_stop, int resolution, double rho_max,
-                      int m = 3);
-
 int main()
 {
 
-    output_stability(140, 141, 2, 4.5);
+    //output_stability(50, 100, 20, 4.5);
+    output_eigenstates(3, 240, 7, 0.5);
 
 
     /*
@@ -84,93 +81,6 @@ int main()
 
 
     //return UnitTest::RunAllTests();
-}
-
-void eigenstates_index(int m, double *index_list, int n, double *eigenvalues)
-{
-    int i;
-    int j;
-    int index;
-
-    double min_value;
-    double last_value;
-
-    index = 0;
-    last_value = 0;
-
-    for( i = 0; i < m; i++ ){
-        min_value = 1e10;
-        for( j = 0; j < n; j++ ){
-            if( ( eigenvalues[j] < min_value ) && ( eigenvalues[j] > last_value ) ){
-                min_value = eigenvalues[j];
-                index = j;
-            }
-        }
-        index_list[i] = index;
-        last_value = eigenvalues[index];
-    }
-}
-
-
-void output_stability(int n_start, int n_stop, int resolution, double rho_max, int m)
-{
-    int n;
-    int i;
-    int j;
-    int k;
-
-    int h;
-
-    int counter;
-
-    h = ( n_stop - n_start ) / (resolution-1);
-
-    double *index_list = new double[m];
-
-    // Write to file:
-    fstream myfile;
-    myfile.open("output_stability.txt", ios::out);
-
-    for(i=0; i < resolution; i++){
-        n = n_start + i*h;
-        cout << n << endl;
-
-        myfile << n;
-
-        double *eigenvalues = new double[n];
-
-        double **A = new double*[n];
-        for( j = 0; j < n; j++ ){
-             A[j] = new double[n];
-        }
-
-        Harmonic_Oscillator_3d harmonic_oscillator (A);
-
-        harmonic_oscillator.initialize(n, rho_max);
-
-        harmonic_oscillator.solve(eigenvalues,&counter);
-
-        eigenstates_index(m, index_list, n, eigenvalues);
-
-        for( j = 0; j < m; j++ ){
-            k = index_list[j];
-            cout << k << "  " << eigenvalues[k] << endl;
-            myfile << '\t' << eigenvalues[k];
-        }
-        myfile << '\t' << counter << endl;
-
-        for( j = 0; j < n; j++ ){
-            delete[] A[j];
-        }
-        delete[] A;
-
-        delete[] eigenvalues;
-    }
-    myfile.close();
-}
-
-void output_eigenstates(){
-
 }
 
 
