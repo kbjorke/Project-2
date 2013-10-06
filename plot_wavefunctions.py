@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-f = open('output_eigenstates.txt', 'r')
+f = open('../Project2-build/output_eigenstates.txt', 'r')
 
 i = 0
 for line in f:
@@ -13,6 +13,8 @@ for line in f:
         n = int(column[1])
         rho_max = float(column[2])
         omega_r = float(column[3])
+
+        h = rho_max/(n+1)
 
         v = np.zeros((m,n))
         i = 1
@@ -30,6 +32,9 @@ plt.hold('on')
 for j in range(1,m):
     plt.plot(x, v[j])
 
-plt.title('omega_r = %f' % omega_r)
+plt.title(r'$\omega_r$ = %.2f' % omega_r)
+plt.xlabel(r'$\rho$')
+plt.ylabel(r'$\psi(\rho)$')
+plt.legend([(r'$\psi_{%d}(\rho)$' % n) for n in range(m)])
 plt.show()
         
