@@ -32,7 +32,8 @@ void eigenstates_index(int m, double *index_list, int n, double *eigenvalues)
 }
 
 
-void output_stability(int n_start, int n_stop, double resolution, double rho_max, int m)
+void output_stability(int n_start, int n_stop, double resolution, double rho_max,
+                      int m, const char *method)
 {
     int n;
     int i;
@@ -51,6 +52,8 @@ void output_stability(int n_start, int n_stop, double resolution, double rho_max
     fstream myfile;
     myfile.open("output_stability.txt", ios::out);
 
+    myfile << resolution << '\t' << rho_max << '\t' << m << endl;
+
     for(i=0; i < resolution; i++){
         n = n_start + i*h;
         cout << n << endl;
@@ -68,7 +71,7 @@ void output_stability(int n_start, int n_stop, double resolution, double rho_max
 
         harmonic_oscillator.initialize(n, rho_max);
 
-        harmonic_oscillator.solve(eigenvalues,&counter);
+        harmonic_oscillator.solve(eigenvalues,&counter, method);
 
         eigenstates_index(m, index_list, n, eigenvalues);
 
@@ -90,7 +93,8 @@ void output_stability(int n_start, int n_stop, double resolution, double rho_max
     delete[] index_list;
 }
 
-void output_eigenstates(int m, int n_steps, double rho_max, double omega_r)
+void output_eigenstates(int m, int n_steps, double rho_max,
+                        double omega_r, const char *method)
 {
     int i;
     int j;
@@ -104,7 +108,8 @@ void output_eigenstates(int m, int n_steps, double rho_max, double omega_r)
     fstream myfile;
     myfile.open("output_eigenstates.txt", ios::out);
 
-    myfile << m << '\t' << n_steps << '\t' << rho_max << '\t' << omega_r << '\t' << endl;
+    myfile << m << '\t' << n_steps << '\t' << rho_max << '\t' << omega_r
+           << '\t' << endl;
 
     double *eigenvalues = new double[n_steps];
 
@@ -122,7 +127,7 @@ void output_eigenstates(int m, int n_steps, double rho_max, double omega_r)
 
     harmonic_oscillator.initialize(n_steps, rho_max, omega_r);
 
-    harmonic_oscillator.solve(eigenvalues,&counter);
+    harmonic_oscillator.solve(eigenvalues,&counter, method,true);
 
     eigenstates_index(m, index_list, n_steps, eigenvalues);
 
@@ -148,4 +153,3 @@ void output_eigenstates(int m, int n_steps, double rho_max, double omega_r)
 
     myfile.close();
 }
-
