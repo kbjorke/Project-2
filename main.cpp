@@ -12,72 +12,8 @@ using namespace std;
 int main()
 {
 
-    //output_stability(50, 100, 20, 4.5);
-    output_eigenstates(3, 240, 7, 0.5);
-
-
-    /*
-    int n;
-    int i;
-    int j;
-
-    double rho_max;
-
-    double *index_list = new double[3];
-
-    rho_max = 4.5;
-    n = 140;
-
-    double *eigenvalues = new double[n];
-    int counter;
-
-    double **A = new double*[n];
-    for( i = 0; i < n; i++ ){
-        A[i] = new double[n];
-    }
-
-    double **P = new double*[n];
-    for( i = 0; i < n; i++ ){
-        P[i] = new double[n];
-    }
-
-
-    Harmonic_Oscillator_3d harmonic_oscillator (A);
-
-    harmonic_oscillator.initialize(n, rho_max);
-
-    harmonic_oscillator.solve(eigenvalues,&counter);
-
-    eigenstates_index(3, index_list, n, eigenvalues);
-
-    for( i = 0; i < 3; i++ ){
-        j = index_list[i];
-        cout << eigenvalues[j] << " " << index_list[i] << endl;
-    }
-
-    sort(eigenvalues, eigenvalues+n);
-
-    for( i = 0; i < n; i++ ){
-        cout << eigenvalues[n-1-i] << endl;
-    }
-
-    cout << endl << counter << endl;
-
-
-
-
-    for( i = 0; i < n; i++ ){
-        delete[] A[i];
-    }
-    delete[] A;
-
-
-
-    for( i = 0; i < n; i++ ){
-        delete[] P[i];
-    }
-    delete[] P;
-    */
+    //output_stability(50, 100, 10, 6, 3, "householder");
+    output_eigenstates(3, 300, 6, 0, "householder");
 
 
     //return UnitTest::RunAllTests();
