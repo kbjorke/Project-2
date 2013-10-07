@@ -12,8 +12,9 @@ using namespace std;
 int main()
 {
 
-    //output_stability(50, 100, 10, 6, 3, "householder");
-    output_eigenstates(3, 300, 6, 0, "householder");
+    output_eigenvalues(250, 0.01, 16, 3);
+    //output_stability(200, 250, 3, 6, 3, "householder");
+    output_eigenstates(3, 250, 16, 0.1);
 
 
     //return UnitTest::RunAllTests();
@@ -211,7 +212,3 @@ TEST(Harmonic_ocillator_3d_initialize)
     delete[] P;
 }
 
-
-TEST(Harmonic_ocillator_3d_solve)
-{
-}

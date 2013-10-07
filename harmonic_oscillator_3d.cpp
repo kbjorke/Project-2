@@ -99,13 +99,15 @@ void Harmonic_Oscillator_3d::initialize(int n_steps, double rho_max,
 }
 
 
-void Harmonic_Oscillator_3d::solve(double *eigenvalues, int *counter, const char *method, bool normalize)
+void Harmonic_Oscillator_3d::solve(double *eigenvalues, int *counter,
+                                   const char *method, bool normalize)
 {
     int i;
     int j;
 
     double e_value;
     double *e_list = new double[n+1];
+
 
     if( strcmp(method, "jacobi") == 0 ){
         if( eigenvectors ){
@@ -119,12 +121,21 @@ void Harmonic_Oscillator_3d::solve(double *eigenvalues, int *counter, const char
             eigenvalues[i] = A[i][i];
         }
     }
+
     else if( strcmp(method, "householder") == 0 ){
         e_value = A[0][1];
         e_list[0] = 0;
         for( i = 0; i < n; i++ ){
             e_list[i+1] = e_value;
             eigenvalues[i] = A[i][i];
+        }
+
+
+        if( eigenvectors==false ){
+            P = new double*[n];
+            for( j = 0; j < n; j++ ){
+                P[j] = new double[n];
+            }
         }
 
         for( i = 0; i < n; i++ ){
@@ -139,15 +150,31 @@ void Harmonic_Oscillator_3d::solve(double *eigenvalues, int *counter, const char
         }
 
         tqli(eigenvalues,e_list,n,P);
+
+        for( i = 0; i < n; i++){
+            for( j = 0; j < n; j++){
+                P[i][j] = -P[i][j];
+            }
+        }
+
     }
 
     if( normalize ){
         for( i = 0; i < n; i++){
             for( j = 0; j < n; j++){
-                P[i][j] = -P[i][j]/sqrt(h);
+                P[i][j] = P[i][j]/sqrt(h);
             }
         }
     }
 
     delete[] e_list;
+
+
+    if( eigenvectors==false && ( strcmp(method,"householder") == 0 ) ){
+        for( j = 0; j < n; j++ ){
+            delete[] P[j];
+        }
+        delete[] P;
+    }
+
 }

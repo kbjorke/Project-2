@@ -21,20 +21,24 @@ for line in f:
     else:
         column = line.split()
         for j in range(m):
-            v[j,i-1] = float(column[j])
+            v[j,i-1] = float(column[j])**2
         
         i += 1
 
-x = np.linspace(0, rho_max, n)
+x = np.linspace(h, rho_max, n)
 
 plt.plot(x, v[0])
 plt.hold('on')
 for j in range(1,m):
     plt.plot(x, v[j])
 
-plt.title(r'$\omega_r$ = %.2f' % omega_r)
-plt.xlabel(r'$\rho$')
-plt.ylabel(r'$\psi(\rho)$')
-plt.legend([(r'$\psi_{%d}(\rho)$' % n) for n in range(m)])
+#plt.title(r'$\omega_r$ = %.2f' % omega_r)
+#plt.xlabel(r'$\rho$', fontsize=16)
+plt.xlabel(r'$\psi$', fontsize=16)
+#plt.ylabel(r'$\psi(\rho)$', fontsize=16)
+plt.ylabel(r'$|\psi(r)|^2$', fontsize=16)
+#plt.legend([(r'$\psi_{%d}(\rho)$' % n) for n in range(m)])
+plt.legend([(r'$\psi_{%d}(r)$' % n) for n in range(m)])
+plt.savefig('eigenstates_omegar_0_01.eps', format='eps')
 plt.show()
         

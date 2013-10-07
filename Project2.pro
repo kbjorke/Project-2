@@ -8,7 +8,7 @@ SOURCES += main.cpp \
     output_functions.cpp \
     lib.cpp
 
-LIBS += -larmadillo -lblas -llapack -lunittest++
+LIBS += -larmadillo -lblas -llapack -lunittest++ -lrt
 
 HEADERS += \
     jacobi_algorithm.h \
